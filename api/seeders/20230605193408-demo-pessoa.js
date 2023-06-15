@@ -7,7 +7,7 @@ module.exports = {
   async up(queryInterface, Sequelize) { // inserir em lote
     await queryInterface.bulkInsert('Pessoas', [
       {
-        nome: 'Jorge Delas',
+        nome: 'Jorge',
         ativo: true,
         email: "joger1@email.com",
         role: "estudante",
@@ -23,17 +23,17 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        nome: 'Jorjaum uiui',
+        nome: 'Jorjaum',
         ativo: true,
-        email: "uiui@email.com",
+        email: "jorjaum@email.com",
         role: "estudante",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        nome: 'Professor Maurinho',
+        nome: 'Professor Mauricio',
         ativo: true,
-        email: "maurinho@email.com",
+        email: "mauricio@email.com",
         role: "docente",
         createdAt: new Date(),
         updatedAt: new Date(),
