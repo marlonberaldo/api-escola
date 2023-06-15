@@ -1,33 +1,46 @@
-# API DE ESCOLA DE INGLÊS
+# API DE ESCOLA (NODE E Sequelize)
   - Controle de pessoas, níveis, matrículas e turmas
 
-# Instalação das dependências:
-  - npm install sequelize sequelize-cli pg express nodemon
+  ### Tecnologias utilizadas nessa aplicação?
+    - NodeJs
+    - Sequelize como ORM
+    - Express 
 
-# Configuração da conexão com o banco de dados:
+
+
+## Instalação das dependências:
+  - npm install sequelize sequelize-cli mysql2 express nodemon
+
+## Configuração da conexão com o banco de dados:
   - criaçao do arquivo config.json
 
-# Criação do modelo:
+## Em caso de uma reestruração de pastas: 
+  - Criação do arquivo .sequelizerc
+    - fazer o redirecionamento dos diretórios
+
+## Criação do modelo:
   ```
     npx sequelize-cli model:create --name Matriculas --attributes status:string
   ```
   - arquivos serão gerados na pasta models, local onde definimos os modelos com seus atributos, regras, tratamentos
 
-# Criação da migração: 
+## Criação da migração: 
   Execute o seguinte comando para gerar um arquivo de migração:
   ```
      npx sequelize-cli migration:generate --name nome-da-migracao
   ```
   - Edite o arquivo gerado em migrations/timestamp-nome-da-migracao.js e defina as alterações do esquema do banco de dados.
 
-# Execução das migrações:
+## Execução das migrações:
   ```
     npx sequelize-cli db:migrate
   ```
   - Isso criará as tabelas e colunas definidas nas migrações.
 
-# Consultas e manipulação de dados:
+## Consultas e manipulação de dados:
   - Use os métodos fornecidos pelo Sequelize (como create, findAll, update, destroy) para realizar operações de consulta e manipulação de dados nos modelos (nos controllers, juntamente com os services)
+
+
 
 
 ## ESTRUTURAL ##
