@@ -39,6 +39,27 @@ class PessoaController {
     }
   }
 
+  static async pegaPessoaPorNome(req, res) {
+    const { term } = req.query;
+
+
+    if (!term || term.length < 3) {
+      return res.status(400).json({ message: "A busca deve ter no mínimo 3 caracteres" });
+    }
+
+    try {
+      const pessoa = await pessoasServices.pegaRegistroPorNome(term, "nome")
+
+      if (pessoa.length === 0) {
+        return res.status(404).json({ message: `Nenhuma pessoa com o nome: '${term}' encontrado` });
+      }
+
+      return res.status(200).json(pessoa)
+    } catch (error) {
+      return res.status(500).json(error.message);
+    }
+  }
+
   static async criarPessoa(req, res) {
     const novaPessoa = req.body; // infos do corpo da requisição
 
@@ -93,138 +114,6 @@ class PessoaController {
   }
 
   // -=-=-= MATRICULAS -=-=-=-=
-
-  // matriculas sempre são vinculadas a uma pessoa, por isso não tem controller especificos ou router
-  static async pegaUmaMatricula(req, res) {
-
-    // localhost:8000/pessoas/:estudanteId/matricula/:matriculaId
-    const { estudanteId, matriculaId } = req.params;
-
-    try {
-      const umaMatricula = await dataBase.Matriculas.findOne({
-        where: {
-          id: Number(matriculaId),
-          estudante_id: Number(estudanteId),
-        }
-      });
-
-      if (!umaMatricula) {
-        return res.status(404).json({ message: `Pessoa/ matricula não encontrada` });
-      }
-
-      return res.status(200).json(umaMatricula);
-    } catch (error) {
-      return res.status(500).json(error.message);
-    }
-  }
-
-  static async criarMatricula(req, res) {
-    const { estudanteId } = req.params;
-    const novaMatricula = { ...req.body, estudante_id: Number(estudanteId) }; // infos do corpo da requisição
-
-    try {
-      const novaMatriculaCriada = await dataBase.Matriculas.create(novaMatricula); // cria registro no bancos
-
-      return res.status(200).json(novaMatriculaCriada);
-    } catch (error) {
-      return res.status(500).json(error.message);
-    }
-  }
-
-  static async atualizarMatricula(req, res) {
-    const { estudanteId, matriculaId } = req.params;
-    const novasInfos = req.body; // infos do corpo da requisição
-
-    try {
-      await dataBase.Matriculas.update(novasInfos, {
-        where: {
-          id: Number(matriculaId),
-          estudante_id: Number(estudanteId),
-        }
-      }); // update retorna 0 ou 1
-      const matriculaAtualizada = await dataBase.Matriculas.findOne({
-        where: {
-          id: Number(matriculaId),
-          // estudante_id: Number(estudanteId),
-        }
-      })
-      return res.status(200).json(matriculaAtualizada);
-    } catch (error) {
-      return res.status(500).json(error.message);
-    }
-  }
-
-  static async deletarMatricula(req, res) {
-    const { estudanteId, matriculaId } = req.params;
-
-    try {
-      await dataBase.Matriculas.destroy({ // IMPORTANTE PASSAR O WHERE CASO CONTRARIO SERÁ APAGADO TODO O BANCO KK
-        where: {
-          id: Number(matriculaId),
-          // estudante_id: Number(estudanteId),
-        }
-      });
-
-      return res.status(200).json({ message: `Matricula com id:'${matriculaId}' deletado` });
-    } catch (error) {
-      return res.status(500).json(error.message);
-    }
-  }
-
-  static async restauraMatricula(req, res) {
-    const { estudanteId, matriculaId } = req.params;
-
-    try {
-      await dataBase.Matriculas.restore({
-        where: {
-          id: Number(matriculaId),
-          estudante_id: Number(estudanteId)
-        }
-      })
-      return res.status(200).json({ mensagem: `id ${matriculaId} restaurado` })
-
-    } catch (error) {
-      return res.status(500).json(error.message)
-    }
-  }
-
-
-
-  static async pegaMatriculasPorTurma(req, res) { // checar quantas matriculas temos em cada turma, e ver se esta lotada
-    const { turmaId } = req.params;
-
-    try {
-      const todasAsMatriculas = await dataBase.Matriculas.findAndCountAll({
-        where: {
-          turma_id: Number(turmaId),
-          status: "confirmado", // pega todas as matriculas confirmadas
-        },
-        limit: 20, // util para paginacao, --> somente nas rows
-        order: [['estudante_id', 'DESC']] // coluna
-      });
-      return res.status(200).json(todasAsMatriculas);
-    } catch (error) {
-      return res.status(500).json(error.message);
-    }
-  }
-
-  static async pegaTurmasLotadas(req, res) { // saber se a turma está lotada ou não
-    const lotacaoTurma = 2;
-
-    try {
-      const turmasLotadas = await dataBase.Matriculas.findAndCountAll({
-        where: {
-          status: "confirmado",
-        },
-        attributes: ['turma_id'], // atributo do modelo que queremos trabalhar
-        group: ['turma_id'], // junte o resultado checando o resultado da coluna
-        having: Sequelize.literal(`count(turma_id) >= ${lotacaoTurma}`) // query sql em node com sequelize --> quantos matriculas sao maior que lotacao turma
-      });
-      return res.status(200).json(turmasLotadas.count)
-    } catch (error) {
-      return res.status(500).json(error.message);
-    }
-  }
 
   static async pegaMatriculas(req, res) { // todas as matriculas de um estudante em especifico
     const { estudanteId } = req.params;

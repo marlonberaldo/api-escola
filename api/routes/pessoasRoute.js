@@ -7,7 +7,7 @@ const router = Router();
 router
   .get("/pessoas", PessoaController.pegaTodasAsPessoas) // somente as pessoas com ativo : true
   .get("/pessoas/ativas", PessoaController.pegaTodasAsPessoasAtivas) // pega todas as pessoas sem constraints
-  .get("/pessoas/:estudanteId/matricula/:matriculaId", PessoaController.pegaUmaMatricula)
+  .get("/pessoas/busca", PessoaController.pegaPessoaPorNome) // ?term=...
   .get("/pessoas/:id", PessoaController.pegaPessoaPorId)
   .get("/pessoas/:estudanteId/matricula", MatriculaController.pegaUmaMatricula)
   .get("/pessoas/matricula/:turmaId/confirmadas", MatriculaController.pegaMatriculasPorTurma)

@@ -28,18 +28,17 @@ class NivelController {
   }
 
   static async pegarNivelPorNome(req, res) {
-    const { name } = req.query;
-    console.log(name);
+    const { term } = req.query;
 
-    if (!name || name.length < 3) {
-      return res.status(400).json({ message: "'name' deve ter no mínimo 3 caracteres" });
+    if (!term || term.length < 3) {
+      return res.status(400).json({ message: "A busca deve ter no mínimo 3 caracteres" });
     }
 
     try {
-      const niveis = await niveisServices.pegaNivelPorNome(name) // filtrar por parciais da query completa
+      const niveis = await niveisServices.pegaRegistroPorNome(term, "descr_nivel") // filtrar por parciais da query completa
 
       if (niveis.length === 0) {
-        return res.status(404).json({ message: `Nenhum nível com o nome: '${name}' encontrado` });
+        return res.status(404).json({ message: `Nenhum nível com o nome: '${term}' encontrado` });
       }
 
       return res.status(200).json(niveis);

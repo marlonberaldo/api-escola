@@ -9,9 +9,6 @@ class NiveisServices extends Services {
   }
 
   // metodos especificos do controlador de Niveis
-  async pegaNivelPorNome(name) {
-    return dataBase[this.nomeDoModelo].findAll({ where: { descr_nivel: { [Op.like]: `%${name}%` } } })
-  }
 
 }
 
